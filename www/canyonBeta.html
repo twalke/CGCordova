@@ -1,0 +1,131 @@
+<html>
+    <head>
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+        <link rel="stylesheet" type="text/css" href="css/canyonBeta.css">
+        <title>Canyon Beta</title>
+    </head>
+
+    <body>
+      <div id="content">
+        <div id="title"></div>
+        <a id="back"><</a>
+        <div id="map">MAP</div>
+        <button id="improveCanyonButton">Improve Canyon</button>
+        <button id="addFavButton" onclick="colorChange()">Add to Favorites</button>
+        <div id="basicStats" class="textData">
+          <div id="time">Time: </div>
+          <div id="distance">Distance: </div>
+          <div id="raps">Raps: </div>
+        </div>
+        <div id="description" class="textData">
+          <div>Description</div>
+          <div id="descData"></div>
+        </div>
+        <div id="comments"></div>
+      </div>
+
+      <script src="https://www.gstatic.com/firebasejs/5.5.1/firebase.js"></script>
+      <script>
+      let fullString = parent.document.URL.substring(parent.document.URL.indexOf('?'), parent.document.URL.length);
+      while(fullString.charAt(0) === '?')
+      {
+       fullString = fullString.substr(1);
+      }
+      fullString = fullString.replace(/%20/g," ");
+
+      var stateTitle = fullString.split("?").shift();
+      var areaTitle = fullString.split("?").splice(1,3).shift();
+      var canyonTitle = fullString.split("?").pop();
+
+      console.log(stateTitle);
+      console.log(areaTitle);
+      console.log(canyonTitle);
+
+      document.getElementById("title").innerHTML = canyonTitle + " - ";
+      document.getElementById("back").setAttribute("href", `canyonList.html?${stateTitle}?${areaTitle}`);
+
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyA3lwDX5qL9kK0tnVS9m8qwJGNz2LhlRhE",
+        authDomain: "cg-web-25e81.firebaseapp.com",
+        databaseURL: "https://cg-web-25e81.firebaseio.com",
+        projectId: "cg-web-25e81",
+        storageBucket: "cg-web-25e81.appspot.com",
+        messagingSenderId: "651753349541"
+      };
+      firebase.initializeApp(config);
+
+      database = firebase.database();
+
+      var ref = database.ref('0');
+      ref.on('value', gotData, errData);
+
+      function gotData(data) {
+        var states = data.val();
+        var keys = Object.keys(states);
+
+         ref = database.ref("0");
+         ref.child(stateTitle).child(areaTitle).child(canyonTitle).once('value', getRating);
+         ref.child(stateTitle).child(areaTitle).child(canyonTitle).once('value', getTime);
+         ref.child(stateTitle).child(areaTitle).child(canyonTitle).once('value', getDistance);
+         ref.child(stateTitle).child(areaTitle).child(canyonTitle).once('value', getRaps);
+         ref.child(stateTitle).child(areaTitle).child(canyonTitle).once('value', getDescription);
+      }
+
+      /*************************************Rating****************************************************/
+      function getRating(data) {
+          var canyonInfo = data.val();
+          var keys = Object.keys(canyonInfo);
+          document.getElementById("title").innerHTML = canyonTitle + "-" + canyonInfo.rating;
+          if(canyonInfo.rating == undefined) {
+            document.getElementById("title").innerHTML = canyonTitle;
+          }
+      }
+      /****************************************Time*************************************************/
+      function getTime(data) {
+          var canyonInfo = data.val();
+          var keys = Object.keys(canyonInfo);
+          document.getElementById("time").innerHTML = "Time: " + canyonInfo.time;
+          if(canyonInfo.time == undefined) {
+            document.getElementById("time").innerHTML = "Time: -";
+          }
+      }
+      /*****************************************Distance************************************************/
+      function getDistance(data) {
+          var canyonInfo = data.val();
+          var keys = Object.keys(canyonInfo);
+          document.getElementById("distance").innerHTML = "Distance: " + canyonInfo.dist;
+          if(canyonInfo.dist == undefined) {
+            document.getElementById("distance").innerHTML = "Distance: -";
+          }
+      }
+      /******************************************Raps***********************************************/
+      function getRaps(data) {
+          var canyonInfo = data.val();
+          var keys = Object.keys(canyonInfo);
+          document.getElementById("raps").innerHTML = "Raps: " + canyonInfo.raps + ", " + canyonInfo.longest;
+      }
+      /*****************************************Description************************************************/
+      function getDescription(data) {
+          var canyonInfo = data.val();
+          var keys = Object.keys(canyonInfo);
+          document.getElementById("descData").innerHTML = canyonInfo.desc;
+          if(canyonInfo.desc == undefined) {
+            document.getElementById("descData").innerHTML = "-";
+          }
+      }
+      /*****************************************************************************************/
+
+      function errData(err) {
+        console.log('Error.');
+        console.log(err);
+      }
+
+      function colorChange() {
+        document.getElementById("addFavButton").setAttribute("style", "background-color: #D58936;")
+      }
+      </script>
+    </body>
+    </html>

@@ -1,0 +1,94 @@
+<html>
+    <head>
+        <!--
+        Customize this policy to fit your own app's needs. For more guidance, see:
+            https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
+        Some notes:
+            * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
+            * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+            * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+                * Enable inline JS: add 'unsafe-inline' to default-src
+        -->
+        <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;"> -->
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+        <link rel="stylesheet" type="text/css" href="css/stateList.css">
+        <title>Hello World</title>
+    </head>
+    <body>
+      <div id="content">
+        <div id="title">States List</div>
+        <a id="back" href="index.html"><</a>
+        <div id="mainText"></div>
+        <div id="suggestNewButton">Suggest New State</div>
+        <a id="snbClick" href="suggestNewState.html"></a>
+        <a id="state0" href="areaList.html?Arizona"></a>
+        <a id="state1" href="areaList.html?California"></a>
+        <a id="state2" href="areaList.html?Colorado"></a>
+        <a id="state3" href="areaList.html?Nevada"></a>
+        <a id="state4" href="areaList.html?Oregon"></a>
+        <a id="state5" href="areaList.html?Utah"></a>
+        <a id="state6" href="areaList.html?Washington"></a>
+      </div>
+
+
+        <ol id="stateList">
+
+        </ol>
+
+      <script src="https://www.gstatic.com/firebasejs/5.5.1/firebase.js"></script>
+      <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyA3lwDX5qL9kK0tnVS9m8qwJGNz2LhlRhE",
+        authDomain: "cg-web-25e81.firebaseapp.com",
+        databaseURL: "https://cg-web-25e81.firebaseio.com",
+        projectId: "cg-web-25e81",
+        storageBucket: "cg-web-25e81.appspot.com",
+        messagingSenderId: "651753349541"
+      };
+      firebase.initializeApp(config);
+
+      database = firebase.database();
+
+      var ref = database.ref('0');
+      // var ref = new Firebase("https://cg-web-25e81.firebaseio.com/");
+      ref.on('value', gotData, errData);
+
+      function gotData(data) {
+        // console.log(data.val());
+        var states = data.val();
+        var keys = Object.keys(states);
+        console.log(keys);
+
+        for (var i = 0; i < keys.length; i++) {
+          var k = keys[i];
+          var state = states[k].keys;
+          // console.log(keys);
+          // var li = document.createElement("li", keys);
+          // li.parent('stateList');
+
+          // var btn = document.createElement("button");
+          // var t = document.createTextNode("state"[i]);
+          // btn.appendChild(t);
+          // document.body.appendChild(btn);
+          document.getElementById("state0").innerHTML = keys[0];
+          document.getElementById("state1").innerHTML = keys[1];
+          document.getElementById("state2").innerHTML = keys[2];
+          document.getElementById("state3").innerHTML = keys[3];
+          document.getElementById("state4").innerHTML = keys[4];
+          document.getElementById("state5").innerHTML = keys[5];
+          document.getElementById("state6").innerHTML = keys[6];
+        }
+        // $("#test").append(keys);
+
+      }
+
+      function errData(err) {
+        console.log('Error.');
+        console.log(err);
+      }
+      </script>
+    </body>
+    </html>

@@ -1,0 +1,152 @@
+<html>
+    <head>
+        <!--
+        Customize this policy to fit your own app's needs. For more guidance, see:
+            https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
+        Some notes:
+            * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
+            * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+            * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+                * Enable inline JS: add 'unsafe-inline' to default-src
+        -->
+        <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;"> -->
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+        <link rel="stylesheet" type="text/css" href="css/areaList.css">
+        <title>Hello World</title>
+    </head>
+    <body>
+      <div id="content">
+        <div id="title"></div>
+        <a id="back" href="stateList.html"><</a>
+        <div id="mainText"></div>
+        <div id="suggestNewButton">Suggest New Area</div>
+      </div>
+
+
+      <script src="https://www.gstatic.com/firebasejs/5.5.1/firebase.js"></script>
+      <script>
+      let areaTitle = parent.document.URL.substring(parent.document.URL.indexOf('?'), parent.document.URL.length);
+      while(areaTitle.charAt(0) === '?')
+      {
+       areaTitle = areaTitle.substr(1);
+      }
+      document.getElementById("title").innerHTML = areaTitle;
+
+
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyA3lwDX5qL9kK0tnVS9m8qwJGNz2LhlRhE",
+        authDomain: "cg-web-25e81.firebaseapp.com",
+        databaseURL: "https://cg-web-25e81.firebaseio.com",
+        projectId: "cg-web-25e81",
+        storageBucket: "cg-web-25e81.appspot.com",
+        messagingSenderId: "651753349541"
+      };
+      firebase.initializeApp(config);
+
+      database = firebase.database();
+
+      // var ref = database.ref('0');
+      // ref.on('value', gotData, errData);
+      //
+      // function gotData(data) {
+      //   var states = data.val();
+      //   var keys = Object.keys(states);
+      //   console.log(keys);
+      // }
+      //
+      // function errData(err) {
+      //   console.log('Error.');
+      //   console.log(err);
+      // }
+
+      // for (var i = 0; i < keys.length; i++) {
+      //   var k = keys[i];
+      //   var state = states[k].keys;
+      //   document.getElementById("state0").innerHTML = keys[0];
+      //
+      // }
+
+      var ref = database.ref('0');
+      ref.on('value', gotData, errData);
+
+      function gotData(data) {
+        var states = data.val();
+        var keys = Object.keys(states);
+        console.log(keys);
+
+        // for (var i = 0; i < keys.length; i++) {
+        //   var k = keys[i];
+        //   var area = k.area;
+        //   console.log(area);
+        //
+        //   // document.getElementById("state0").innerHTML = keys[0];
+        //
+        // }
+
+         ref = database.ref("0");
+         ref.child(areaTitle).once('value', gotUserData);
+
+
+      }
+      var x = 0;
+      function gotUserData(snapshot) {
+        // let j = 0;
+        snapshot.forEach(userSnapshot => {
+        var area = userSnapshot.key;
+        var info = ref.child(areaTitle).child(area).once('value', getAreaData)
+        console.log(area);
+
+        // j++;
+        // for (var i = 0; i < j; i++) {
+        // area.forEach
+          //var k = keys[i];
+          //var area = area[k].keys;
+          // grid-column: 3/14;
+          // grid-row: 1/2;
+
+          var newArea = document.createElement("div");
+          newArea.setAttribute("id", "area" +[x]);
+          newArea.setAttribute("style", "font-size: 20px;");
+          document.getElementById("mainText").appendChild(newArea);
+          document.getElementById("area"+[x]).innerHTML = area;
+          if(x%2 == 1) {
+            newArea.setAttribute("style", "background-color: cccccc; font-size: 20px;");
+          }
+          x++;
+        // }
+      })
+
+
+      }
+
+      function getAreaData(snapshot) {
+        snapshot.forEach(userSnapshot => {
+          var canyon = userSnapshot.key;
+          console.log(canyon);
+        })
+      }
+
+      function errData(err) {
+        console.log('Error.');
+        console.log(err);
+      }
+
+
+
+// let states;
+// let collection;
+//       var areaRef = states.collection("Arizona");
+//
+// var query = areaRef.where("Arizona", "==", true);
+// console.log(areaRef);
+// console.log(query);
+
+
+
+      </script>
+
+</body>
+</html>

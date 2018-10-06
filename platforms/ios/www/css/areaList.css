@@ -1,0 +1,75 @@
+body {
+    -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
+    -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
+    -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
+    background-color:#E4E4E4;
+    background-image:linear-gradient(top, #A7A7A7 0%, #E4E4E4 51%);
+    background-image:-webkit-linear-gradient(top, #A7A7A7 0%, #E4E4E4 51%);
+    background-image:-ms-linear-gradient(top, #A7A7A7 0%, #E4E4E4 51%);
+    background-image:-webkit-gradient(
+        linear,
+        left top,
+        left bottom,
+        color-stop(0, #A7A7A7),
+        color-stop(0.51, #E4E4E4)
+    );
+    background-attachment:fixed;
+    /* font-family:'HelveticaNeue-Light', 'HelveticaNeue', Helvetica, Arial, sans-serif; */
+    font-family: 'Avenir Next';
+    font-size:12px;
+    height:100%;
+    margin:0px;
+    padding:0px;
+    width:100%;
+}
+
+#content {
+  height: 100vh;
+  width: 100vw;
+  position: absolute;
+  display: grid;
+  grid-template-columns: repeat(13, 1fr);
+  grid-auto-rows: minmax(5vh, auto);
+  margin: 0 auto;
+}
+
+#title {
+  grid-column: 3/14;
+  grid-row: 1/2;
+  background-color: #2B2A48;
+  font-size: 20pt;
+  color: white;
+  padding-left: 80px;
+  padding-top: 20px;
+}
+#back {
+  grid-column: 1/3;
+  grid-row: 1/2;
+  background-color: #2B2A48;
+  font-size: 20pt;
+  color: white;
+  text-align: center;
+  padding-top: 20px;
+  text-decoration: none;
+}
+
+#mainText {
+  grid-column: 1/14;
+  grid-row: 2/10;
+  background-color: white;
+}
+
+#suggestNewButton {
+  grid-column: 1/14;
+  grid-row: 10/12;
+  background-color: #D58936;
+  font-size: 20pt;
+  color: white;
+  text-align: center;
+  padding-top: 40px;
+}
+#snbClick {
+  grid-column: 1/14;
+  grid-row: 10/12;
+  background-color: transparent;
+}

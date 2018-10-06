@@ -1,0 +1,92 @@
+<html>
+    <head>
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+        <link rel="stylesheet" type="text/css" href="css/canyonList.css">
+        <title>Canyon List</title>
+    </head>
+
+    <body>
+      <div id="content">
+        <div id="title"></div>
+        <a id="back"><</a>
+        <div id="mainText"></div>
+        <a id="suggestNewButton">Suggest New Canyon</a>
+      </div>
+
+      <script src="https://www.gstatic.com/firebasejs/5.5.1/firebase.js"></script>
+      <script>
+      //set title based on area clicked in previous screen
+      let fullString = parent.document.URL.substring(parent.document.URL.indexOf('?'), parent.document.URL.length);
+      while(fullString.charAt(0) === '?')
+      {
+       fullString = fullString.substr(1);
+      }
+      fullString = fullString.replace(/%20/g," ");
+
+      var stateTitle = fullString.split("?").shift();
+      var areaTitle = fullString.split("?").pop();
+      document.getElementById("suggestNewButton").setAttribute("href", `suggestNewCanyon.html?${areaTitle}?${stateTitle}`);
+
+      document.getElementById("title").innerHTML = areaTitle;
+      document.getElementById("back").setAttribute("href", `areaList.html?${stateTitle}`);
+
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyA3lwDX5qL9kK0tnVS9m8qwJGNz2LhlRhE",
+        authDomain: "cg-web-25e81.firebaseapp.com",
+        databaseURL: "https://cg-web-25e81.firebaseio.com",
+        projectId: "cg-web-25e81",
+        storageBucket: "cg-web-25e81.appspot.com",
+        messagingSenderId: "651753349541"
+      };
+      firebase.initializeApp(config);
+
+      database = firebase.database();
+
+      var ref = database.ref('0');
+      ref.on('value', gotData, errData);
+
+      //get list of canyons from current area in firebase
+      function gotData(data) {
+        var states = data.val();
+        var keys = Object.keys(states);
+
+         ref = database.ref("0");
+         ref.child(stateTitle).child(areaTitle).once('value', getCanyonData);
+      }
+
+      //print list of canyons from firebase to screen as clickable buttons
+      var x = 0;
+      function getCanyonData(snapshot) {
+        snapshot.forEach(userSnapshot => {
+          var canyon = userSnapshot.key;
+          console.log(canyon);
+
+          var newDiv = document.createElement("div");
+          newDiv.setAttribute("id", "newDiv" +[x]);
+          newDiv.setAttribute("style", "padding-top: 15px; padding-bottom: 15px;");
+
+          var newCanyon = document.createElement("a");
+          newCanyon.setAttribute("id", "canyon" +[x]);
+          newCanyon.setAttribute("style", "font-size: 20px; text-decoration: none; color: #2B2A48; padding-left: 20px;");
+          newCanyon.setAttribute("href", `canyonBeta.html?${stateTitle}?${areaTitle}?${canyon}`);
+          document.getElementById("mainText").appendChild(newDiv);
+          document.getElementById("newDiv" +[x]).appendChild(newCanyon);
+          document.getElementById("canyon"+[x]).innerHTML = canyon;
+          if(x%2 == 1) {
+            newCanyon.setAttribute("style", "font-size: 20px; text-decoration: none; color: #2B2A48; padding-left: 20px;");
+            newDiv.setAttribute("style", "background-color: cccccc; padding-top: 15px; padding-bottom: 15px;");
+          }
+          x++;
+        })
+      }
+
+      function errData(err) {
+        console.log('Error.');
+        console.log(err);
+      }
+      </script>
+    </body>
+    </html>

@@ -1,0 +1,38 @@
+<html>
+    <head>
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+        <link rel="stylesheet" type="text/css" href="css/favorites.css">
+        <title>Hello World</title>
+    </head>
+    <body>
+      <div id="content">
+        <div id="title">Favorites</div>
+        <a id="back" href="index.html"><</a>
+        <div id="mainText"></div>
+        <div id="suggestNewButton">Edit List</div>
+      </div>
+
+
+      <script src="https://www.gstatic.com/firebasejs/5.5.1/firebase.js"></script>
+      <script>
+      // document.getElementById("back").setAttribute("href", `areaList.html?${lastTitle}`);
+
+
+
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyA3lwDX5qL9kK0tnVS9m8qwJGNz2LhlRhE",
+        authDomain: "cg-web-25e81.firebaseapp.com",
+        databaseURL: "https://cg-web-25e81.firebaseio.com",
+        projectId: "cg-web-25e81",
+        storageBucket: "cg-web-25e81.appspot.com",
+        messagingSenderId: "651753349541"
+      };
+      firebase.initializeApp(config);
+
+      database = firebase.database();
+      </script>
+    </body>
+    </html>

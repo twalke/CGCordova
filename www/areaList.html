@@ -1,0 +1,87 @@
+<html>
+    <head>
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+        <link rel="stylesheet" type="text/css" href="css/areaList.css">
+        <title>Area List</title>
+    </head>
+
+    <body>
+      <div id="content">
+        <div id="title"></div>
+        <a id="back" href="stateList.html"><</a>
+        <div id="mainText"></div>
+        <a id="suggestNewButton">Suggest New Area</a>
+      </div>
+
+      <script src="https://www.gstatic.com/firebasejs/5.5.1/firebase.js"></script>
+      <script>
+      //set title based on state clicked in previous screen
+      let areaTitle = parent.document.URL.substring(parent.document.URL.indexOf('?'), parent.document.URL.length);
+      while(areaTitle.charAt(0) === '?')
+      {
+       areaTitle = areaTitle.substr(1);
+      }
+      document.getElementById("title").innerHTML = areaTitle;
+
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyA3lwDX5qL9kK0tnVS9m8qwJGNz2LhlRhE",
+        authDomain: "cg-web-25e81.firebaseapp.com",
+        databaseURL: "https://cg-web-25e81.firebaseio.com",
+        projectId: "cg-web-25e81",
+        storageBucket: "cg-web-25e81.appspot.com",
+        messagingSenderId: "651753349541"
+      };
+      firebase.initializeApp(config);
+
+      database = firebase.database();
+
+      var ref = database.ref('0');
+      ref.on('value', gotData, errData);
+
+      //get list of areas from current state in firebase
+      function gotData(data) {
+        var states = data.val();
+        var keys = Object.keys(states);
+
+         ref = database.ref("0");
+         ref.child(areaTitle).once('value', gotAreaData);
+      }
+      var x = 0;
+
+      //print list of areas from firebase to screen as clickable buttons
+      function gotAreaData(snapshot) {
+        snapshot.forEach(userSnapshot => {
+        var area = userSnapshot.key;
+
+        var newDiv = document.createElement("div");
+        newDiv.setAttribute("id", "newDiv" +[x]);
+        newDiv.setAttribute("style", "padding-top: 15px; padding-bottom: 15px;");
+
+        var newArea = document.createElement("a");
+        newArea.setAttribute("id", "area" +[x]);
+        newArea.setAttribute("style", "font-size: 20px; text-decoration: none; color: #2B2A48; padding-left: 20px;");
+        newArea.setAttribute("href", `canyonList.html?${areaTitle}?${area}`);
+        document.getElementById("mainText").appendChild(newDiv);
+        document.getElementById("newDiv"+[x]).appendChild(newArea);
+        document.getElementById("area"+[x]).innerHTML = area;
+        if(x%2 == 1) {
+          newArea.setAttribute("style", "font-size: 20px; text-decoration: none; color: #2B2A48; padding-left: 20px;");
+          newDiv.setAttribute("style", "background-color: cccccc; padding-top: 15px; padding-bottom: 15px;");
+        }
+        x++;
+      })
+      }
+
+      function errData(err) {
+        console.log('Error.');
+        console.log(err);
+      }
+
+      document.getElementById("suggestNewButton").setAttribute("href", `suggestNewArea.html?${areaTitle}`);
+      </script>
+
+</body>
+</html>
